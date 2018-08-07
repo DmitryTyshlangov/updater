@@ -1,14 +1,40 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Updater
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content class="page" padding>
+
+  <div *ngIf="state!='upToDate' && !isUpdateChecked && showUpdating">
+    Checking updates... 
+  </div>
+
+  <div *ngIf="state=='old' && isUpdateChecked">
+    New version: {{latestVersion}} Current version {{currentVersion}}
+  </div>
+
+  <button ion-button (click)="update()" full *ngIf="state=='old' && isUpdateChecked">
+    Update
+  </button>
+
+  <div class="centered" *ngIf="state=='updating' && isUpdateChecked">
+    <div class="lds-ring">
+      <div> </div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <br />
+    <div class="centered" >
+        {{percent}}
+    </div>
+  </div>
+
+  <div *ngIf="state=='upToDate' && isUpdateChecked">
+    Up ot date!
+  </div>
+
 </ion-content>
