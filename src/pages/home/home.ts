@@ -77,7 +77,7 @@ export class HomePage {
     this.state = "none";
     this.showUpdating = false;
     this.isUpdateChecked = false;
-    console.log("Err: " + err.toString() + " this = " + this);
+    console.log("Err: " + err.toString()+"\n"+JSON.stringify(err));
   }
 
   private saveToDataFile(val: string): void {

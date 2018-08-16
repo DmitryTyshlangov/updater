@@ -29,13 +29,13 @@ export class UpdateCheckerProvider {
 
   }
 
-  private extractLatestVersion(versions: string[]): string {
+  /*private extractLatestVersion(versions: string[]): string {
     versions = versions.map(a => a.replace(/\d+/g, n => (+n + 100000).toString())).sort()
       .map(a => a.replace(/\d+/g, n => (+n - 100000).toString()));
     return versions[versions.length - 1];
-  }
+  }*/
 
-  private compareVersions(ver1: string, ver2: string): number {
+  /*private compareVersions(ver1: string, ver2: string): number {
     let v1 = ver1.trim().split('.');
     let v2 = ver2.trim().split('.');
 
@@ -56,6 +56,10 @@ export class UpdateCheckerProvider {
         }
       }
     }
+  }*/
+
+  private compareVersions(v1:string, v2:string):number{
+    return v1.localeCompare(v2);
   }
 
   /**
@@ -68,12 +72,13 @@ export class UpdateCheckerProvider {
 
     this.ap.requestPermission(this.ap.PERMISSION.INTERNET)
       .then(() => {
-        this.http.get(this.serverAdress + "/versions").toPromise()
+        this.http.get(this.serverAdress + "/versions/latest").toPromise()
           .then(resp => {
-            let versions = resp.json();
-            //console.log(JSON.stringify(versions));
-            this.latestVersion = this.extractLatestVersion(versions.map(v => v.version));
-            this.latestFileName = versions.find(v => v.version == this.latestVersion).filename;
+            let obj = resp.json();
+            console.log(JSON.stringify(obj));
+            //this.latestVersion = this.extractLatestVersion(versions.map(v => v.version));
+            this.latestFileName ="update"+ obj.version;
+            this.latestVersion = obj.version;
 
             let comp = this.compareVersions(this.currentVersion, this.latestVersion);
             if (comp == 1 || comp == 0) {
