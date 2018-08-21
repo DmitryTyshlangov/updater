@@ -35,31 +35,48 @@ export class UpdateCheckerProvider {
     return versions[versions.length - 1];
   }*/
 
-  /*private compareVersions(ver1: string, ver2: string): number {
-    let v1 = ver1.trim().split('.');
-    let v2 = ver2.trim().split('.');
+  private compareVersions(ver1: string, ver2: string): number {
+    let search = /\s*-\s*rc\s*/;
+    let rc1 = ver1.match(search);
+    let rc2 = ver2.match(search);
 
-    let length = v1.length >= v2.length ? v1.length : v2.length;
+    let v1 = ver1.replace(search, "").trim().split('.');
+    let v2 = ver2.replace(search, "").trim().split('.');
+
+    let length = 3;
     for (let i = 0; i < length; i++) {
 
-      let lh = i < v1.length ? v1[i] : 0;
-      let rh = i < v2.length ? v2[i] : 0;
+      let lh = v1[i];
+      let rh = v2[i];
 
       if (lh > rh) {
         return 1;
-      } else if (v1[i] < v2[i]) {
+      } else if (lh < rh) {
         return -1;
       }
       else {
         if (lh == rh && i == length - 1) {
-          return 0;
+
+          if (rc1 != null && rc2 == null) {
+            return -1;
+          } else if (rc1 == null && rc2 != null) {
+            return 1;
+          } else if (rc1 == null && rc2 == null) {
+            return 0;
+          } else if (rc1 != null && rc2 != null) {
+            let lh4 = v1[length];
+            let rh4 = v2[length];
+            if (lh4 > rh4) {
+              return 1;
+            } else if (lh4 < rh4) {
+              return -1;
+            } else {
+              return 0;
+            }
+          }
         }
       }
     }
-  }*/
-
-  private compareVersions(v1:string, v2:string):number{
-    return v1.localeCompare(v2);
   }
 
   /**
@@ -68,7 +85,7 @@ export class UpdateCheckerProvider {
    * @param upToDate When version from server <= than local
    * @param error 
    */
-  public checkUpdates(needUpdate: (newVersion:string) => void, upToDate: () => void, error: (any) => void): void {
+  public checkUpdates(needUpdate: (newVersion: string) => void, upToDate: () => void, error: (any) => void): void {
 
     this.ap.requestPermission(this.ap.PERMISSION.INTERNET)
       .then(() => {
@@ -77,7 +94,7 @@ export class UpdateCheckerProvider {
             let obj = resp.json();
             console.log(JSON.stringify(obj));
             //this.latestVersion = this.extractLatestVersion(versions.map(v => v.version));
-            this.latestFileName ="update"+ obj.version;
+            this.latestFileName = "update" + obj.version;
             this.latestVersion = obj.version;
 
             let comp = this.compareVersions(this.currentVersion, this.latestVersion);
