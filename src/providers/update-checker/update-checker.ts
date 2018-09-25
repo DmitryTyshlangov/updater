@@ -46,8 +46,8 @@ export class UpdateCheckerProvider {
     let length = 3;
     for (let i = 0; i < length; i++) {
 
-      let lh = v1[i];
-      let rh = v2[i];
+      let lh = parseInt(v1[i]);
+      let rh = parseInt(v2[i]);
 
       if (lh > rh) {
         return 1;
