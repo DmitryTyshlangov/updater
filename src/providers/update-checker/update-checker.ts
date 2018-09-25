@@ -64,8 +64,8 @@ export class UpdateCheckerProvider {
           } else if (rc1 == null && rc2 == null) {
             return 0;
           } else if (rc1 != null && rc2 != null) {
-            let lh4 = v1[length];
-            let rh4 = v2[length];
+            let lh4 = parseInt(v1[length]);
+            let rh4 = parseInt(v2[length]);
             if (lh4 > rh4) {
               return 1;
             } else if (lh4 < rh4) {
